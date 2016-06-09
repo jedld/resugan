@@ -1,11 +1,24 @@
 require 'spec_helper'
 
-describe Resugan do
-  it 'has a version number' do
-    expect(Resugan::VERSION).not_to be nil
+class TestObject
+  def method1(params)
+    fire :event3
   end
+end
 
-  it 'does something useful' do
-    expect(false).to eq(true)
+describe Resugan do
+  it 'captures fire calls' do
+    Resugan::Kernel.register(:event1, ->(params) {
+          puts "Hello world!"
+          TestObject.new.method1(params)
+      })
+
+    expect_any_instance_of(TestObject).to receive(:method1)
+
+    resugan {
+      fire :event1
+      fire :event1
+      fire :event2, param1: "hello"
+    }
   end
 end
