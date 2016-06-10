@@ -1,7 +1,7 @@
 class Object
-  def resugan(&block)
+  def resugan(namespace = '', &block)
     current_thread = Thread.current
-    current_thread.push_resugan_context
+    current_thread.push_resugan_context(namespace)
 
     block.call
 

@@ -1,6 +1,7 @@
 module Resugan
   class Context
-    def initialize
+    def initialize(namespace = '')
+      @namespace = namespace
       @events = {}
     end
 
@@ -17,7 +18,7 @@ module Resugan
     def invoke
       @events.each do |k,v|
         puts "fire #{k}"
-        Resugan::Kernel.invoke(k, v)
+        Resugan::Kernel.invoke(@namespace, k, v)
       end
     end
   end

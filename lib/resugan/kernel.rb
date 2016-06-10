@@ -1,9 +1,13 @@
 module Resugan
   class Kernel
     def self.register(event, block)
+      register_with_namespace("", event, block)
+    end
+
+    def self.register_with_namespace(namespace, event, block)
       @listener = {} unless @listener
 
-      event = event.to_sym
+      event = "#{namespace}_event".to_sym
 
       unless @listener[event]
         @listener[event] = [block]
@@ -14,12 +18,18 @@ module Resugan
       self
     end
 
-    def self.invoke(event, payload = [])
+    def self.invoke(namespace, event, payload = [])
+      event = "#{namespace}_event".to_sym
+
       if @listener[event]
         @listener[event].each do |listener|
           listener.call(payload.map { |p| p[:params] })
         end
       end
+    end
+
+    def self.clear
+      @listener.clear if @listener
     end
   end
 end

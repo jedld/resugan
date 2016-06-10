@@ -1,10 +1,10 @@
 class Thread
-  def push_resugan_context
+  def push_resugan_context(namespace = '')
     if !@resugan_context
       @resugan_context_stack = []
     end
 
-    @resugan_context = Resugan::Context.new
+    @resugan_context = Resugan::Context.new(namespace)
     @resugan_context_stack << @resugan_context
   end
 
