@@ -2,7 +2,6 @@ require 'spec_helper'
 
 class TestObject
   def method1(params)
-    fire :event3
   end
 end
 
@@ -12,7 +11,7 @@ describe Resugan do
   end
 
   it 'captures fire calls' do
-    Resugan::Kernel.register(:event1, ->(params) {
+    Resugan::Kernel.register(:event2, ->(params) {
           puts "Hello world!"
           TestObject.new.method1(params)
       })
@@ -36,7 +35,7 @@ describe Resugan do
 
     resugan "namespace1" do
       fire :event1
-      fire :event1
+      fire :event3
       fire :event2, param1: "hello"
     end
   end
