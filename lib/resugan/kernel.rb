@@ -20,7 +20,7 @@ module Resugan
 
     def self.invoke(namespace, event, payload = [])
       event = "#{namespace}_#{event}".to_sym
-
+      p payload
       if @listener[event]
         @listener[event].each do |listener|
           listener.call(payload.map { |p| p[:params] })

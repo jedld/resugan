@@ -1,8 +1,21 @@
 require 'spec_helper'
 
 class TestObject
+  include Resugan::ObjectHelpers
+
   def method1(params)
   end
+
+  def method2
+    fire :event2
+  end
+
+  def method3
+    fire :event2
+  end
+
+  attach_hook :method2
+  attach_hook :method3, namespace: "namespace1"
 end
 
 describe Resugan do
@@ -12,7 +25,6 @@ describe Resugan do
 
   it 'captures fire calls' do
     Resugan::Kernel.register(:event2, ->(params) {
-          puts "Hello world!"
           TestObject.new.method1(params)
       })
 
@@ -25,10 +37,28 @@ describe Resugan do
     }
   end
 
-  it 'supports multiple namespaces' do
-    Resugan::Kernel.register_with_namespace("namespace1", :event1, ->(params) {
-          puts "Hello world!"
+  it 'supports method hooks' do
+    Resugan::Kernel.register(:event2, ->(params) {
           TestObject.new.method1(params)
+      })
+
+    Resugan::Kernel.register_with_namespace("namespace1", :event2, ->(params) {
+          TestObject.new.method2(params)
+          expect(params[0][:param1]).to eq "hello"
+      })
+
+
+    expect_any_instance_of(TestObject).to receive(:method1)
+    expect_any_instance_of(TestObject).to receive(:method2)
+
+    TestObject.new.method2
+    TestObject.new.method3
+  end
+
+  it 'supports multiple namespaces' do
+    Resugan::Kernel.register_with_namespace("namespace1", :event2, ->(params) {
+          TestObject.new.method1(params)
+          expect(params[0][:param1]).to eq "hello"
       })
 
     expect_any_instance_of(TestObject).to receive(:method1)

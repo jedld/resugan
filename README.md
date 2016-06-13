@@ -1,8 +1,7 @@
 # Resugan
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/resugan`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Simple, powerful and unobstrusive observer pattern framework for ruby. This gem provides
+a base framework in order to build a more powerful event based system on top of it.
 
 ## Installation
 
@@ -20,9 +19,43 @@ Or install it yourself as:
 
     $ gem install resugan
 
-## Usage
+## Basic Usage
 
-TODO: Write usage instructions here
+Register listeners:
+
+```ruby
+  Resugan::Kernel.register(:event2, ->(params) {
+        puts "hello! event 2 has been called!"
+    })
+
+  Resugan::Kernel.register(:hay, ->(params) {
+        puts "hello! someone said hay!"
+    })
+```
+
+Generate events and wrap them in a resugan block:
+
+```ruby
+resugan {
+  puts "I am now going to generate an event"
+
+  fire :event2
+
+  fire :hay
+}
+```
+
+The two events should fire and should print:
+
+```
+hello! event 2 has been called!
+hello! someone said hay!
+```
+
+Note that your listener will be executed once even if an event has been fired
+multiple times. However params will contain the payload of both events.
+
+Please see spec/resugan_spec.rb for more examples and details.
 
 ## Development
 
@@ -38,4 +71,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
