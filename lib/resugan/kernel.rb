@@ -1,5 +1,15 @@
 module Resugan
   class Kernel
+    def self.dispatcher_for(namespace = '')
+      @dispatchers = {} unless @dispatchers
+      @dispatchers[namespace] || Resugan::Engine::InlineDispatcher.new
+    end
+
+    def self.register_dispatcher(dispatcher, namespace = '')
+      @dispatchers = {} unless @dispatchers
+      @dispatchers[namespace] = dispatcher
+    end
+
     def self.register(event, block)
       register_with_namespace("", event, block)
     end
@@ -20,7 +30,6 @@ module Resugan
 
     def self.invoke(namespace, event, payload = [])
       event = "#{namespace}_#{event}".to_sym
-      p payload
       if @listener[event]
         @listener[event].each do |listener|
           listener.call(payload.map { |p| p[:params] })

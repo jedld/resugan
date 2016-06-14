@@ -16,10 +16,8 @@ module Resugan
     end
 
     def invoke
-      @events.each do |k,v|
-        puts "fire #{k}"
-        Resugan::Kernel.invoke(@namespace, k, v)
-      end
+      dispatcher = Resugan::Kernel.dispatcher_for(@namespace)
+      dispatcher.dispatch(@namespace, @events)
     end
   end
 end

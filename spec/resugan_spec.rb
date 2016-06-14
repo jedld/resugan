@@ -6,12 +6,15 @@ class TestObject
   def method1(params)
   end
 
+  def methodx(params)
+  end
+
   def method2
-    fire :event2
+    fire :event1
   end
 
   def method3
-    fire :event2
+    fire :event2, param1: "hello"
   end
 
   attach_hook :method2
@@ -38,18 +41,18 @@ describe Resugan do
   end
 
   it 'supports method hooks' do
-    Resugan::Kernel.register(:event2, ->(params) {
+    Resugan::Kernel.register(:event1, ->(params) {
           TestObject.new.method1(params)
       })
 
     Resugan::Kernel.register_with_namespace("namespace1", :event2, ->(params) {
-          TestObject.new.method2(params)
+          TestObject.new.methodx(params)
           expect(params[0][:param1]).to eq "hello"
       })
 
 
     expect_any_instance_of(TestObject).to receive(:method1)
-    expect_any_instance_of(TestObject).to receive(:method2)
+    expect_any_instance_of(TestObject).to receive(:methodx)
 
     TestObject.new.method2
     TestObject.new.method3
