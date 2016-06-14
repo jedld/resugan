@@ -15,4 +15,10 @@ class Object
       current_thread.resugan_context.register(event, params)
     end
   end
+
+  def listener(event, options = {}, &block)
+    Resugan::Kernel.register_with_namespace(options[:namespace], event, options[:id], ->(params) {
+        block.call(params)
+      })
+  end
 end

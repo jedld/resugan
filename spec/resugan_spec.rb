@@ -27,9 +27,9 @@ describe Resugan do
   end
 
   it 'captures fire calls' do
-    Resugan::Kernel.register(:event2, ->(params) {
-          TestObject.new.method1(params)
-      })
+    listener :event2 do |params|
+      TestObject.new.method1(params)
+    end
 
     expect_any_instance_of(TestObject).to receive(:method1)
 
@@ -41,15 +41,14 @@ describe Resugan do
   end
 
   it 'supports method hooks' do
-    Resugan::Kernel.register(:event1, ->(params) {
-          TestObject.new.method1(params)
-      })
+    listener :event1 do |params|
+      TestObject.new.method1(params)
+    end
 
-    Resugan::Kernel.register_with_namespace("namespace1", :event2, ->(params) {
-          TestObject.new.methodx(params)
-          expect(params[0][:param1]).to eq "hello"
-      })
-
+    listener :event2, namespace: "namespace1" do |params|
+      TestObject.new.methodx(params)
+      expect(params[0][:param1]).to eq "hello"
+    end
 
     expect_any_instance_of(TestObject).to receive(:method1)
     expect_any_instance_of(TestObject).to receive(:methodx)
@@ -59,10 +58,10 @@ describe Resugan do
   end
 
   it 'supports multiple namespaces' do
-    Resugan::Kernel.register_with_namespace("namespace1", :event2, ->(params) {
-          TestObject.new.method1(params)
-          expect(params[0][:param1]).to eq "hello"
-      })
+    listener :event2, namespace: "namespace1" do |params|
+      TestObject.new.method1(params)
+      expect(params[0][:param1]).to eq "hello"
+    end
 
     expect_any_instance_of(TestObject).to receive(:method1)
 
@@ -71,5 +70,39 @@ describe Resugan do
       fire :event3
       fire :event2, param1: "hello"
     end
+  end
+
+  it 'supports multiple hooks on one event' do
+    expect_any_instance_of(TestObject).to receive(:method1)
+    expect_any_instance_of(TestObject).to receive(:methodx)
+
+    listener :event1 do |params|
+      TestObject.new.method1(params)
+    end
+
+    listener :event1 do |params|
+      TestObject.new.methodx(params)
+    end
+
+    resugan {
+      fire :event1
+    }
+  end
+
+  it 'if id is given, listener with that id is only allowed to be registered once' do
+    listener :event1, id: 'cat' do |params|
+      TestObject.new.method1(params)
+    end
+
+    listener :event1, id: 'cat' do |params|
+      TestObject.new.methodx(params)
+      fail
+    end
+
+    expect_any_instance_of(TestObject).to receive(:method1)
+
+    resugan {
+      fire :event1
+    }
   end
 end

@@ -24,13 +24,13 @@ Or install it yourself as:
 Register listeners:
 
 ```ruby
-  Resugan::Kernel.register(:event2, ->(params) {
-        puts "hello! event 2 has been called!"
-    })
+  listener :event1 do |params|
+    puts "hello! event 2 has been called!"
+  end
 
-  Resugan::Kernel.register(:hay, ->(params) {
-        puts "hello! someone said hay!"
-    })
+  listener :hay do |params|
+    puts "hello! someone said hay!"
+  end
 ```
 
 Generate events and wrap them in a resugan block:

@@ -10,12 +10,15 @@ module Resugan
       @dispatchers[namespace] = dispatcher
     end
 
-    def self.register(event, block)
+    def self.register(event, &block)
       register_with_namespace("", event, block)
     end
 
-    def self.register_with_namespace(namespace, event, block)
+    def self.register_with_namespace(namespace, event, listener_id = nil, block)
+      @listener_ids = {} unless @listener_ids
       @listener = {} unless @listener
+
+      return self if listener_id && @listener_ids["#{namespace}_#{listener_id}"]
 
       event = "#{namespace}_#{event}".to_sym
 
@@ -24,6 +27,8 @@ module Resugan
       else
         @listener[event] << block
       end
+
+      @listener_ids["#{namespace}_#{listener_id}"] = block if listener_id
 
       self
     end
@@ -42,6 +47,7 @@ module Resugan
     end
 
     def self.clear
+      @listener_ids.clear if @listener_ids
       @listener.clear if @listener
     end
   end
