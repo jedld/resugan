@@ -1,6 +1,6 @@
 # Resugan
 
-Simple, powerful and unobstrusive observer pattern framework for ruby. This gem provides
+Simple, powerful and unobstrusive event driven architecture framework for ruby. This gem provides
 a base framework in order to build a more powerful event based system on top of it.
 
 ## Installation
