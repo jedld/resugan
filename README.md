@@ -1,7 +1,7 @@
 # Resugan
 
 Simple, powerful and unobstrusive event driven architecture framework for ruby. This gem provides
-a base framework in order to build a more powerful event based system on top of it.
+a base framework in order to build a more powerful event based system on top of it. Events cuts across multiple objects and allows you to cleanly separate business logic to other cross cutting concerns like analytics and logging. Multiple events are consolidated allowing you to efficiently batch related operations together.
 
 ## Installation
 
@@ -53,7 +53,7 @@ hello! someone said hay!
 ```
 
 Note that your listener will be executed once even if an event has been fired
-multiple times. However params will contain the payload of both events.
+multiple times. However params will contain the payload of both events. This allows you to batch together requests and efficiently dispatch them as a group.
 
 Please see spec/resugan_spec.rb for more examples and details.
 
