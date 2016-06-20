@@ -45,6 +45,8 @@ resugan {
 }
 ```
 
+Note that events don't have to be fired at the top level of the block, even objects used inside the block can invoke fire to generate an event.
+
 The two events should fire and should print:
 
 ```
