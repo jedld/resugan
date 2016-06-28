@@ -42,6 +42,8 @@ resugan {
   _fire :event2
 
   _fire :hay
+
+  _fire :bam, { some_param: 'param' } # you can pass hashes to add meta to the event
 }
 ```
 
