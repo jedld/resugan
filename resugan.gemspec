@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Joseph Emmanuel Dayo"]
   spec.email         = ["joseph.dayo@gmail.com"]
 
-  spec.summary       = %q{ simple, powerful and unobstrusive observer pattern framework for ruby }
-  spec.description   = %q{ simple, powerful and unobstrusive observer pattern framework for ruby }
+  spec.summary       = %q{ simple, powerful and unobstrusive event framework for ruby }
+  spec.description   = %q{ simple, powerful and unobstrusive event framework for ruby }
   spec.homepage      = "https://github.com/jedld/resugan"
   spec.license       = "MIT"
 
