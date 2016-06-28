@@ -59,6 +59,37 @@ hello! someone said hay!
 Note that your listener will be executed once even if an event has been fired
 multiple times. However params will contain the payload of both events. This allows you to batch together requests and efficiently dispatch them as a group.
 
+# Object helpers
+
+Helpers are available to make listening firing events a little bit cleaner:
+
+```ruby
+class TestObject
+  include Resugan::ObjectHelpers
+end
+```
+
+This basically allows for the attach_hook to be available
+
+```ruby
+class TestObject
+  include Resugan::ObjectHelpers
+
+  def method2
+    _fire :event1
+  end
+
+  def method3
+    _fire :event2, param1: "hello"
+  end
+
+  attach_hook :method2
+  attach_hook :method3, namespace: "namespace1"
+end
+```
+
+What this does is it essentially wraps the specified methods inside a resugan block.
+
 Please see spec/resugan_spec.rb for more examples and details.
 
 ## namespaces
