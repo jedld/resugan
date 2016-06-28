@@ -24,11 +24,11 @@ Or install it yourself as:
 Register listeners:
 
 ```ruby
-  listener :event1 do |params|
+  _listener :event1 do |params|
     puts "hello! event 2 has been called!"
   end
 
-  listener :hay do |params|
+  _listener :hay do |params|
     puts "hello! someone said hay!"
   end
 ```
@@ -39,9 +39,9 @@ Generate events and wrap them in a resugan block:
 resugan {
   puts "I am now going to generate an event"
 
-  fire :event2
+  _fire :event2
 
-  fire :hay
+  _fire :hay
 }
 ```
 
@@ -49,7 +49,7 @@ Note that events don't have to be fired at the top level of the block, even obje
 
 The two events should fire and should print:
 
-```
+```ruby
 hello! event 2 has been called!
 hello! someone said hay!
 ```
@@ -65,20 +65,20 @@ Resugan supports namespaces, allowing you to group listeners and trigger them se
 
 
 ```ruby
-  listener :event1, namespace: "group1" do |params|
+  _listener :event1, namespace: "group1" do |params|
     puts "hello! event 2 has been called!"
   end
 
-  listener :event1, namespace: "group2" do |params|
+  _listener :event1, namespace: "group2" do |params|
     puts "hello! someone said hay!"
   end
 
   resugan "group1" do
-    fire :event1
+    _fire :event1
   end
 
   resugan "group2" do
-    fire :event1
+    _fire :event1
   end
 ```
 

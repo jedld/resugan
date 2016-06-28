@@ -9,14 +9,14 @@ class Object
     context.invoke
   end
 
-  def fire(event, params = {})
+  def _fire(event, params = {})
     current_thread = Thread.current
     if current_thread.resugan_context
       current_thread.resugan_context.register(event, params)
     end
   end
 
-  def listener(event, options = {}, &block)
+  def _listener(event, options = {}, &block)
     Resugan::Kernel.register_with_namespace(options[:namespace], event, options[:id], ->(params) {
         block.call(params)
       })

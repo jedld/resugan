@@ -24,16 +24,16 @@ module Resugan
 
     def self.register_with_namespace(namespace, event, listener_id = nil, block)
       @listener_ids = {} unless @listener_ids
-      @listener = {} unless @listener
+      @_listener = {} unless @_listener
 
       return self if listener_id && @listener_ids["#{namespace}_#{listener_id}"]
 
       event = "#{namespace}_#{event}".to_sym
 
-      unless @listener[event]
-        @listener[event] = [block]
+      unless @_listener[event]
+        @_listener[event] = [block]
       else
-        @listener[event] << block
+        @_listener[event] << block
       end
 
       @listener_ids["#{namespace}_#{listener_id}"] = block if listener_id
@@ -43,20 +43,20 @@ module Resugan
 
     def self.invoke(namespace, event, payload = [])
       event = "#{namespace}_#{event}".to_sym
-      if @listener[event]
-        @listener[event].each do |listener|
-          listener.call(payload.map { |p| p[:params] })
+      if @_listener[event]
+        @_listener[event].each do |_listener|
+          _listener.call(payload.map { |p| p[:params] })
         end
       end
     end
 
     def self.listeners
-      @listener
+      @_listener
     end
 
     def self.clear
       @listener_ids.clear if @listener_ids
-      @listener.clear if @listener
+      @_listener.clear if @_listener
     end
   end
 end
