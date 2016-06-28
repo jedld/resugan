@@ -115,6 +115,18 @@ Or assign it to a specific namespace:
   Resugan::Kernel.register_dispatcher(MyCustomerDispatcher, 'CustomGroup')
 ```
 
+## Related Projects
+
+Below are projects that extend resugan.
+
+Resugan Worker
+==============
+
+A project that wraps resugan listeners to be consumed using an external worker.
+Can also be used as a sample on how to extend resugan.
+
+https://github.com/jedld/resugan-worker
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
