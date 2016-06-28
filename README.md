@@ -110,7 +110,7 @@ You can then set it as the default dispatcher:
 Or assign it to a specific namespace:
 
 ```ruby
-  Resugan::Kernel..register_dispatcher(MyCustomerDispatcher, 'CustomGroup')
+  Resugan::Kernel.register_dispatcher(MyCustomerDispatcher, 'CustomGroup')
 ```
 
 ## Development
