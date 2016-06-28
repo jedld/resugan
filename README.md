@@ -82,7 +82,36 @@ Resugan supports namespaces, allowing you to group listeners and trigger them se
   end
 ```
 
-Behavior is as is expected. events under group1 will only be handled by listeners under group1 and so on.
+Behavior is as expected. Events under group1 will only be handled by listeners under group1 and so on.
+
+## Customizing the Event dispatcher
+
+The way events are consumed is entirely customizable. You can register your own event dispatcher:
+
+```ruby
+class MyCustomerDispatcher
+  def dispatch(namespace, events)
+    events.each do |k,v|
+      Resugan::Kernel.invoke(namespace, k, v)
+    end
+  end
+end
+```
+
+You need to implement your own dispatch method, captured events are passed as
+parameters.
+
+You can then set it as the default dispatcher:
+
+```ruby
+  Resugan::Kernel.set_default_dispatcher(MyCustomerDispatcher)
+```
+
+Or assign it to a specific namespace:
+
+```ruby
+  Resugan::Kernel..register_dispatcher(MyCustomerDispatcher, 'CustomGroup')
+```
 
 ## Development
 
