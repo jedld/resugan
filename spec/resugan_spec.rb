@@ -21,6 +21,18 @@ class TestObject
   attach_hook :method3, namespace: "namespace1"
 end
 
+module Resugan
+  module Engine
+    class CustomDispatcher
+      def dispatch(namespace, events)
+        events.collect do |k,v|
+          "#{k},#{v}"
+        end
+      end
+    end
+  end
+end
+
 describe Resugan do
   before :each do
     Resugan::Kernel.clear
@@ -104,5 +116,20 @@ describe Resugan do
     resugan {
       fire :event1
     }
+  end
+
+  context "customizations" do
+    it "allow the default dispatcher to be modified" do
+      Resugan::Kernel.set_default_dispatcher(Resugan::Engine::CustomDispatcher)
+
+      expect_any_instance_of(Resugan::Engine::CustomDispatcher).to receive(:dispatch).with('',
+        {:event1=>[{:params=>{}}, {:params=>{}}], :event2=>[{:params=>{:param1=>"hello"}}]})
+
+      resugan {
+        fire :event1
+        fire :event1
+        fire :event2, param1: "hello"
+      }
+    end
   end
 end

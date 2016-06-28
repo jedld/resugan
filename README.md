@@ -59,6 +59,31 @@ multiple times. However params will contain the payload of both events. This all
 
 Please see spec/resugan_spec.rb for more examples and details.
 
+## namespaces
+
+Resugan supports namespaces, allowing you to group listeners and trigger them separately
+
+
+```ruby
+  listener :event1, namespace: "group1" do |params|
+    puts "hello! event 2 has been called!"
+  end
+
+  listener :event1, namespace: "group2" do |params|
+    puts "hello! someone said hay!"
+  end
+
+  resugan "group1" do
+    fire :event1
+  end
+
+  resugan "group2" do
+    fire :event1
+  end
+```
+
+Behavior is as is expected. events under group1 will only be handled by listeners under group1 and so on.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

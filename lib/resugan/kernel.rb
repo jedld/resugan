@@ -1,8 +1,16 @@
 module Resugan
   class Kernel
+    def self.set_default_dispatcher(dispatcher)
+      @default_dispatcher ||= dispatcher.new
+    end
+
+    def self.default_dispatcher
+      @default_dispatcher || Resugan::Engine::InlineDispatcher.new
+    end
+
     def self.dispatcher_for(namespace = '')
       @dispatchers = {} unless @dispatchers
-      @dispatchers[namespace] || Resugan::Engine::InlineDispatcher.new
+      @dispatchers[namespace] || default_dispatcher
     end
 
     def self.register_dispatcher(dispatcher, namespace = '')
