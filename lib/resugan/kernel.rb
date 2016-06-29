@@ -1,5 +1,14 @@
 module Resugan
   class Kernel
+    # show warning when a _fire was called and there was no context to consume it
+    def self.warn_no_context_events(enable)
+      @warn_no_context_events = enable
+    end
+
+    def self.warn_no_context_events?
+      @warn_no_context_events || false
+    end
+
     # flag to log the line source where a fire was executed
     def self.enable_line_trace(enable)
       @enable = enable
@@ -54,7 +63,7 @@ module Resugan
       event = "#{namespace}_#{event}".to_sym
       if @_listener && @_listener[event]
         @_listener[event].each do |_listener|
-          _listener.call(payload.map { |p| p[:params] })
+          _listener.call(payload.map { |p| p[:params] || p['params'] })
         end
       end
     end

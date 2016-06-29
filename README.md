@@ -169,8 +169,6 @@ puts resugan {
 {:event1=>[{:params=>{:_source=>"/Users/jedld/workspace/resugan/spec/resugan_spec.rb:144:in `block (5 levels) in <top (required)>'"}}]}
 ```
 
-
-
 ## Related Projects
 
 Below are projects that extend resugan.
