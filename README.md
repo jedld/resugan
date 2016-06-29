@@ -191,7 +191,7 @@ Or assign it to a specific namespace:
 
 This allows you to use various queue backends per namespace, like resugan-worker for example.
 
-## Debugging
+### Debugging
 
 Sometimes you need to track where events are fired. You can do so by enabling line tracing:
 
@@ -212,9 +212,9 @@ puts(resugan {
 {:event1=>[{:params=>{:_source=>"/Users/jedld/workspace/resugan/spec/resugan_spec.rb:144:in `block (5 levels) in <top (required)>'"}}]}
 ```
 
-## Using Resugan::Engine::MarshalledInlineDispatcher
+### Using Resugan::Engine::MarshalledInlineDispatcher
 
-By default, resugan uses the Resugan::Engine::InlineDispatcher as the default dispatcher for 
+By default, resugan uses the Resugan::Engine::InlineDispatcher as the default dispatcher for
 all namespaces. For performance reasons, params passed to the _fire method are passed as is, but there are
 times when you want to simulate params that are passed using JSON.parse as is the case
 when using a custom dispatcher that uses redis (see resugan-worker). In this case you may set MarshalledInlineDispatcher
@@ -224,12 +224,12 @@ as the default dispatcher for test and development environment instead (e.g. rai
 Resugan::Kernel.set_default_dispatcher(Resugan::Engine::MarshalledInlineDispatcher) if Rails.env.development? || Rails.env.test?
 ```
 
-## Related Projects
+Related Projects
+=================
 
 Below are projects that extend resugan.
 
-Resugan Worker
---------------
+### Resugan Worker
 
 A project that wraps resugan listeners to be consumed using an external worker. Think of this as a redis queue backend.
 Can also be used as a sample on how to extend resugan.
