@@ -111,7 +111,6 @@ Please see spec/resugan_spec.rb for more examples and details.
 
 Resugan supports namespaces, allowing you to group listeners and trigger them separately
 
-
 ```ruby
   _listener :event1, namespace: "group1" do |array_of_params|
     puts "hello! event 2 has been called!"
@@ -211,6 +210,18 @@ puts(resugan {
 
 ```ruby
 {:event1=>[{:params=>{:_source=>"/Users/jedld/workspace/resugan/spec/resugan_spec.rb:144:in `block (5 levels) in <top (required)>'"}}]}
+```
+
+## Using Resugan::Engine::MarshalledInlineDispatcher
+
+By default, resugan uses the Resugan::Engine::InlineDispatcher as the default dispatcher for 
+all namespaces. For performance reasons, params passed to the _fire method are passed as is, but there are
+times when you want to simulate params that are passed using JSON.parse as is the case
+when using a custom dispatcher that uses redis (see resugan-worker). In this case you may set MarshalledInlineDispatcher
+as the default dispatcher for test and development environment instead (e.g. rails):
+
+```ruby
+Resugan::Kernel.set_default_dispatcher(Resugan::Engine::MarshalledInlineDispatcher) if Rails.env.development? || Rails.env.test?
 ```
 
 ## Related Projects

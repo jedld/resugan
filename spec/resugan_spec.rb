@@ -36,6 +36,7 @@ end
 describe Resugan do
   before :each do
     Resugan::Kernel.clear
+    Resugan::Kernel.set_default_dispatcher Resugan::Engine::MarshalledInlineDispatcher
   end
 
   it 'captures _fire calls' do
@@ -65,7 +66,7 @@ describe Resugan do
 
     _listener :event2, namespace: "namespace1" do |params|
       TestObject.new.methodx(params)
-      expect(params[0][:param1]).to eq "hello"
+      expect(params[0]['param1']).to eq "hello"
     end
 
     expect_any_instance_of(TestObject).to receive(:method1)
@@ -79,7 +80,7 @@ describe Resugan do
     it 'supports multiple namespaces' do
       _listener :event2, namespace: "namespace1" do |params|
         TestObject.new.method1(params)
-        expect(params[0][:param1]).to eq "hello"
+        expect(params[0]['param1']).to eq "hello"
       end
 
       expect_any_instance_of(TestObject).to receive(:method1)
@@ -169,16 +170,16 @@ describe Resugan do
 
   context "customizations" do
     it "allow the default dispatcher to be modified" do
-      Resugan::Kernel.set_default_dispatcher(Resugan::Engine::CustomDispatcher)
+      Resugan::Kernel.register_dispatcher(Resugan::Engine::CustomDispatcher, "namespacex")
 
-      expect_any_instance_of(Resugan::Engine::CustomDispatcher).to receive(:dispatch).with('',
+      expect_any_instance_of(Resugan::Engine::CustomDispatcher).to receive(:dispatch).with('namespacex',
         {:event1=>[{:params=>{}}, {:params=>{}}], :event2=>[{:params=>{:param1=>"hello"}}]})
 
-      resugan {
+      resugan "namespacex" do
         _fire :event1
         _fire :event1
         _fire :event2, param1: "hello"
-      }
+      end
     end
 
     context "debugging" do

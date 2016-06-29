@@ -33,7 +33,7 @@ module Resugan
 
     def self.register_dispatcher(dispatcher, namespace = '')
       @dispatchers = {} unless @dispatchers
-      @dispatchers[namespace] = dispatcher
+      @dispatchers[namespace] = dispatcher.is_a?(Class) ? dispatcher.new : dispatcher
     end
 
     def self.register(event, &block)
@@ -64,8 +64,6 @@ module Resugan
 
     def self.invoke(namespace, event, payload = [])
       event = "#{namespace}_#{event}".to_sym
-      puts "invoke"
-      p @_listener
       if @_listener && @_listener[event]
         @_listener[event].each do |_listener|
           _listener.call(payload.map { |p| p[:params] || p['params'] })
