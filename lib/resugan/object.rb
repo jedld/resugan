@@ -2,12 +2,12 @@ class Object
   def resugan(namespace = '', &block)
     current_thread = Thread.current
     current_thread.push_resugan_context(namespace)
-
-    block.call
-
-    context = current_thread.pop_resugan_context
-    context.invoke
-
+    begin
+      block.call
+    ensure
+      context = current_thread.pop_resugan_context
+      context.invoke
+    end
     context
   end
 

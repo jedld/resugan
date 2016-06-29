@@ -118,6 +118,28 @@ describe Resugan do
     }
   end
 
+  context "behavior of return and exceptions" do
+    it "Always ensures that events are consumed even if the block returns" do
+      @must_be_true = false
+
+      _listener :event1, id: 'xxx' do |params|
+        @must_be_true = true
+      end
+
+      begin
+        resugan {
+          _fire :event1
+          raise "error"
+        }
+
+        expect(true).to eq false
+      rescue RuntimeError
+      end
+
+      expect(@must_be_true).to be
+    end
+  end
+
   context "customizations" do
     it "allow the default dispatcher to be modified" do
       Resugan::Kernel.set_default_dispatcher(Resugan::Engine::CustomDispatcher)
