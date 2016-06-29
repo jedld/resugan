@@ -1,3 +1,6 @@
+= Version 0.1.11
+  * Allow listeners to attach to multiple namespaces to allow for DRY'er code
+
 = Version 0.1.8
   * First real version for public consumption
 

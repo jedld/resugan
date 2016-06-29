@@ -40,27 +40,32 @@ module Resugan
       register_with_namespace("", event, block)
     end
 
-    def self.register_with_namespace(namespace, event, listener_id = nil, block)
+    def self.register_with_namespace(namespaces, event_type, listener_id = nil, block)
       @listener_ids = {} unless @listener_ids
       @_listener = {} unless @_listener
 
-      return self if listener_id && @listener_ids["#{namespace}_#{listener_id}"]
+      namespaces = namespaces.is_a?(Array) ? namespaces : [namespaces]
+      namespaces.each do |n|
+        next if listener_id && @listener_ids["#{n}_#{listener_id}"]
 
-      event = "#{namespace}_#{event}".to_sym
+        event = "#{n}_#{event_type}".to_sym
 
-      unless @_listener[event]
-        @_listener[event] = [block]
-      else
-        @_listener[event] << block
+        unless @_listener[event]
+          @_listener[event] = [block]
+        else
+          @_listener[event] << block
+        end
+
+        @listener_ids["#{n}_#{listener_id}"] = block if listener_id
       end
-
-      @listener_ids["#{namespace}_#{listener_id}"] = block if listener_id
 
       self
     end
 
     def self.invoke(namespace, event, payload = [])
       event = "#{namespace}_#{event}".to_sym
+      puts "invoke"
+      p @_listener
       if @_listener && @_listener[event]
         @_listener[event].each do |_listener|
           _listener.call(payload.map { |p| p[:params] || p['params'] })

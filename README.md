@@ -5,6 +5,9 @@
 Simple, powerful and unobstrusive event driven architecture framework for ruby. This gem provides
 a base framework in order to build a more powerful event based system on top of it. Events cuts across multiple objects and allows you to cleanly separate business logic to other cross cutting concerns like analytics and logging. Multiple events are consolidated allowing you to efficiently batch related operations together.
 
+Also allows for a customizable backend which enables the use of various evented queuing mechanisms
+like redis queue, amazon sqs with minimal changes to your code that generates the events.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -108,16 +111,33 @@ Resugan supports namespaces, allowing you to group listeners and trigger them se
     puts "hello! someone said hay!"
   end
 
+  _listener :log, namespace: %w(group1 group2) do |params|
+    params.each {
+      puts "listener that belongs to 2 namespaces"
+    }
+  end
+
   resugan "group1" do
     _fire :event1
+    _fire :log
   end
 
   resugan "group2" do
     _fire :event1
+    _fire :log
   end
 ```
 
 Behavior is as expected. Events under group1 will only be handled by listeners under group1 and so on.
+
+The above should print:
+
+```
+hello! event 2 has been called!
+listener that belongs to 2 namespaces
+hello! someone said hay!
+listener that belongs to 2 namespaces
+```
 
 ## Customizing the Event dispatcher
 
@@ -147,6 +167,8 @@ Or assign it to a specific namespace:
 ```ruby
   Resugan::Kernel.register_dispatcher(MyCustomerDispatcher, 'CustomGroup')
 ```
+
+This allows you to use various queue backends per namespace, like resugan-worker for example.
 
 ## Debugging
 

@@ -68,19 +68,39 @@ describe Resugan do
     TestObject.new.method2
     TestObject.new.method3
   end
+  context "namespaces" do
+    it 'supports multiple namespaces' do
+      _listener :event2, namespace: "namespace1" do |params|
+        TestObject.new.method1(params)
+        expect(params[0][:param1]).to eq "hello"
+      end
 
-  it 'supports multiple namespaces' do
-    _listener :event2, namespace: "namespace1" do |params|
-      TestObject.new.method1(params)
-      expect(params[0][:param1]).to eq "hello"
+      expect_any_instance_of(TestObject).to receive(:method1)
+
+      resugan "namespace1" do
+        _fire :event1
+        _fire :event3
+        _fire :event2, param1: "hello"
+      end
     end
 
-    expect_any_instance_of(TestObject).to receive(:method1)
+    it 'supports multiple namespaces per listener' do
+      @counter = 0
+      _listener :event2, namespace: ['namespace1', 'namespace2'] do |params|
+        params.each {  @counter += 1 }
+      end
 
-    resugan "namespace1" do
-      _fire :event1
-      _fire :event3
-      _fire :event2, param1: "hello"
+      resugan("namespace1") do
+        _fire :event2, param1: "hello"
+      end
+
+      resugan("namespace2") do
+        _fire :event2, param2: "Hi"
+      end
+
+      resugan { _fire :event2 }
+
+      expect(@counter).to eq 2
     end
   end
 
