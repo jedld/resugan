@@ -43,12 +43,18 @@ describe Resugan do
       TestObject.new.method1(params)
     end
 
+    _listener :event3 do |params|
+      TestObject.new.methodx(params)
+    end
+
     expect_any_instance_of(TestObject).to receive(:method1)
+    expect_any_instance_of(TestObject).to receive(:methodx)
 
     resugan {
       _fire :event1
       _fire :event1
       _fire :event2, param1: "hello"
+      _fire "event3" # string or symbol doesn't really matter
     }
   end
 
@@ -68,6 +74,7 @@ describe Resugan do
     TestObject.new.method2
     TestObject.new.method3
   end
+
   context "namespaces" do
     it 'supports multiple namespaces' do
       _listener :event2, namespace: "namespace1" do |params|

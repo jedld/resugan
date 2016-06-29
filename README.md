@@ -42,7 +42,7 @@ Listeners are basically code that listens to an event, in this case :event1 and 
 an array of params equal to the number of times that specific event was captured
 will be passed. So if :event1 was called twice, array_of_params will contain 2 elements.
 
-Resugan Generate events and wrap them in a resugan block:
+Generate events using _fire and wrap them in a resugan block:
 
 ```ruby
 resugan {
