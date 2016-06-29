@@ -131,5 +131,32 @@ describe Resugan do
         _fire :event2, param1: "hello"
       }
     end
+
+    context "debugging" do
+      around :each do |example|
+        Resugan::Kernel.enable_line_trace true
+        example.run
+        Resugan::Kernel.enable_line_trace false
+      end
+
+      it "a resugan block returns a context which can be dumped" do
+        context_dump = resugan {
+          _fire :event1
+        }.dump
+
+        expect(context_dump[:event1].size).to eq 1
+      end
+
+      it "allows line source tracing to be enabled" do
+        context_dump = resugan {
+          _fire :event1
+          _fire :event1
+          _fire :event2, param1: "hello"
+        }.dump
+
+        expect(context_dump.size).to eq 2 #two events
+        expect(context_dump[:event2].first[:params][:_source]).to match /spec\/resugan_spec\.rb\:/
+      end
+    end
   end
 end

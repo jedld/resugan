@@ -5,6 +5,10 @@ module Resugan
       @events = {}
     end
 
+    def namespace
+      @namespace
+    end
+
     def register(event, params = {})
       event = event.to_sym
       payload = { params: params }
@@ -18,6 +22,10 @@ module Resugan
     def invoke
       dispatcher = Resugan::Kernel.dispatcher_for(@namespace)
       dispatcher.dispatch(@namespace, @events)
+    end
+
+    def dump
+      @events
     end
   end
 end

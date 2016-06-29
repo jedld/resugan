@@ -146,12 +146,35 @@ Or assign it to a specific namespace:
   Resugan::Kernel.register_dispatcher(MyCustomerDispatcher, 'CustomGroup')
 ```
 
+## Debugging
+
+Sometimes you need to track where events are fired. You can do so by enabling line tracing:
+
+```ruby
+  Resugan::Kernel.enable_line_trace true
+```
+
+Line source should now be passed as params everytime you fire an event. You can also
+view it by dumping a resugan context.
+
+```ruby
+puts resugan {
+  _fire :event1
+}.dump
+```
+
+```ruby
+{:event1=>[{:params=>{:_source=>"/Users/jedld/workspace/resugan/spec/resugan_spec.rb:144:in `block (5 levels) in <top (required)>'"}}]}
+```
+
+
+
 ## Related Projects
 
 Below are projects that extend resugan.
 
 Resugan Worker
-==============
+--------------
 
 A project that wraps resugan listeners to be consumed using an external worker.
 Can also be used as a sample on how to extend resugan.

@@ -1,5 +1,14 @@
 module Resugan
   class Kernel
+    # flag to log the line source where a fire was executed
+    def self.enable_line_trace(enable)
+      @enable = enable
+    end
+
+    def self.line_trace_enabled?
+      @enable || false
+    end
+
     def self.set_default_dispatcher(dispatcher)
       @default_dispatcher ||= dispatcher.new
     end

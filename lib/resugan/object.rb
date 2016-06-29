@@ -7,9 +7,13 @@ class Object
 
     context = current_thread.pop_resugan_context
     context.invoke
+    
+    context
   end
 
   def _fire(event, params = {})
+    params[:_source] = caller[0] if Resugan::Kernel.line_trace_enabled?
+
     current_thread = Thread.current
     if current_thread.resugan_context
       current_thread.resugan_context.register(event, params)
