@@ -6,7 +6,7 @@ Simple, powerful and unobstrusive event driven architecture framework for ruby. 
 a base framework in order to build a more powerful event based system on top of it. Events cuts across multiple objects and allows you to cleanly separate business logic to other cross cutting concerns like analytics and logging. Multiple events are consolidated allowing you to efficiently batch related operations together.
 
 Also allows for a customizable backend which enables the use of various evented queuing mechanisms
-like redis queue, amazon sqs with minimal changes to your code that generates the events.
+like redis queue, amazon SQS with minimal changes to your code that generates the events.
 
 ## Installation
 
@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ## Basic Usage
 
-Register listeners:
+Register listeners, using :
 
 ```ruby
   _listener :event1 do |params|
@@ -38,7 +38,9 @@ Register listeners:
   end
 ```
 
-Generate events and wrap them in a resugan block:
+Listeners are basically code that listens to an event, in this case :event1 and :hay.
+
+Resugan Generate events and wrap them in a resugan block:
 
 ```ruby
 resugan {
@@ -52,7 +54,13 @@ resugan {
 }
 ```
 
-Note that events don't have to be fired at the top level of the block, even objects used inside the block can invoke fire to generate an event.
+The _fire method is available inside all objects, however the events won't be
+collected unless within the context of a resugan block. The idea is that you
+can prepackage a library that fires those events but won't actually
+get used until someone specifically listens for it.
+
+Note that events don't have to be fired at the top level of the block, even objects
+used inside the block can invoke fire to generate an event.
 
 The two events should fire and should print:
 
@@ -205,8 +213,7 @@ https://github.com/jedld/resugan-worker
 
 ## Similar Projects
 
-wisper (https://github.com/krisleech/wisper) - Focuses on a pub-sub model. Resugan is more of an event driven system that cuts
-across multiple objects/classes and possibly even multiple applications as well using resugan-worker. 
+wisper (https://github.com/krisleech/wisper) - An excellent gem that focuses on a pub-sub model. Though its global listeners somehow have the same effect though in a syntactically different way than resugan.
 
 ## Development
 
