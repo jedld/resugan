@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/resugan.svg)](https://badge.fury.io/rb/resugan) 
+[![Gem Version](https://badge.fury.io/rb/resugan.svg)](https://badge.fury.io/rb/resugan) [![CircleCI](https://circleci.com/gh/jedld/resugan.svg?style=svg)](https://circleci.com/gh/jedld/resugan)
 
 # Resugan
 
