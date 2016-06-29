@@ -176,7 +176,7 @@ Below are projects that extend resugan.
 Resugan Worker
 --------------
 
-A project that wraps resugan listeners to be consumed using an external worker.
+A project that wraps resugan listeners to be consumed using an external worker. Think of this as a redis queue backend.
 Can also be used as a sample on how to extend resugan.
 
 https://github.com/jedld/resugan-worker
