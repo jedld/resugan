@@ -204,9 +204,9 @@ Line source should now be passed as params everytime you fire an event. You can 
 view it by dumping a resugan context.
 
 ```ruby
-puts resugan {
+puts(resugan {
   _fire :event1
-}.dump
+}.dump)
 ```
 
 ```ruby
