@@ -29,16 +29,18 @@ Or install it yourself as:
 Register listeners, using :
 
 ```ruby
-  _listener :event1 do |params|
+  _listener :event1 do |array_of_params|
     puts "hello! event 2 has been called!"
   end
 
-  _listener :hay do |params|
+  _listener :hay do |array_of_params|
     puts "hello! someone said hay!"
   end
 ```
 
 Listeners are basically code that listens to an event, in this case :event1 and :hay.
+an array of params equal to the number of times that specific event was captured
+will be passed. So if :event1 was called twice, array_of_params will contain 2 elements.
 
 Resugan Generate events and wrap them in a resugan block:
 
@@ -111,16 +113,16 @@ Resugan supports namespaces, allowing you to group listeners and trigger them se
 
 
 ```ruby
-  _listener :event1, namespace: "group1" do |params|
+  _listener :event1, namespace: "group1" do |array_of_params|
     puts "hello! event 2 has been called!"
   end
 
-  _listener :event1, namespace: "group2" do |params|
+  _listener :event1, namespace: "group2" do |array_of_params|
     puts "hello! someone said hay!"
   end
 
-  _listener :log, namespace: %w(group1 group2) do |params|
-    params.each {
+  _listener :log, namespace: %w(group1 group2) do |array_of_params|
+    array_of_params.each {
       puts "listener that belongs to 2 namespaces"
     }
   end
@@ -145,6 +147,18 @@ hello! event 2 has been called!
 listener that belongs to 2 namespaces
 hello! someone said hay!
 listener that belongs to 2 namespaces
+```
+## Unique Listeners
+
+the _listener always creates a new listener for an event, so if it so happens that
+the code that creates those listeners gets executed again it will create another one.
+if you want to make sure that listener only gets executed once you can pass an id
+option:
+
+```ruby
+listener :event1, id: 'no_other_listener_like_this' do |array|
+ # some code that gets executed
+end
 ```
 
 ## Customizing the Event dispatcher
