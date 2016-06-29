@@ -203,6 +203,11 @@ Can also be used as a sample on how to extend resugan.
 
 https://github.com/jedld/resugan-worker
 
+## Similar Projects
+
+wisper (https://github.com/krisleech/wisper) - Focuses on a pub-sub model. Resugan is more of an event driven system that cuts
+across multiple objects/classes and possibly even multiple applications as well using resugan-worker. 
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
