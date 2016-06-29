@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/resugan.svg)](https://badge.fury.io/rb/resugan) 
+
 # Resugan
 
 Simple, powerful and unobstrusive event driven architecture framework for ruby. This gem provides
