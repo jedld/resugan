@@ -139,11 +139,22 @@ describe Resugan do
       fail
     end
 
+    # _listener! prevents a block from being defined twice
+    count = 0
+    2.times do |i|
+      _listener! :event2 do |params|
+        count += 1
+      end
+    end
+
     expect_any_instance_of(TestObject).to receive(:method1)
 
     resugan {
       _fire :event1
+      _fire :event2
     }
+
+    expect(count).to eq(1)
   end
 
   context "behavior of return and exceptions" do

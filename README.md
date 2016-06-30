@@ -155,8 +155,19 @@ if you want to make sure that listener only gets executed once you can pass an i
 option:
 
 ```ruby
-listener :event1, id: 'no_other_listener_like_this' do |array|
+_listener :event1, id: 'no_other_listener_like_this' do |array|
  # some code that gets executed
+end
+```
+
+Or you can use the _listener! form which make sure a certain block is limited to
+only a single instance.
+
+```ruby
+2.times do |i|
+  _listener! :event1 do |array|
+    # There will be only one instance of this listener no matter how many times it is defined
+  end
 end
 ```
 
@@ -238,7 +249,9 @@ https://github.com/jedld/resugan-worker
 
 ## Similar Projects
 
-wisper (https://github.com/krisleech/wisper) - An excellent gem that focuses on a pub-sub model. Though its global listeners somehow have the same effect though in a syntactically different way than resugan.
+wisper (https://github.com/krisleech/wisper) - An excellent gem that focuses on a coupled pub-sub model. Though its global listeners somehow have the same effect though in a syntactically different way.
+
+event_bus (https://github.com/kevinrutherford/event_bus) - Loosely coupled pub-sub similar to resugan
 
 ## Development
 

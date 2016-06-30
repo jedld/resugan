@@ -27,4 +27,10 @@ class Object
         block.call(params)
       })
   end
+
+  def _listener!(event, options = {}, &block)
+    Resugan::Kernel.register_with_namespace(options[:namespace], event, options[:id] || caller[0], ->(params) {
+        block.call(params)
+      })
+  end
 end
