@@ -1,39 +1,53 @@
 module Resugan
+  class Config
+    attr_accessor :reuse_top_level_context, :warn_no_context_events, :line_trace_enabled, :default_dispatcher
+
+    def initialize
+      @reuse_top_level_context = true
+      @warn_no_context_events = false
+      @line_trace_enabled = false
+      @default_dispatcher = Resugan::Engine::InlineDispatcher
+    end
+  end
+
   class Kernel
-    # show warning when a _fire was called and there was no context to consume it
-    def self.warn_no_context_events(enable)
-      @warn_no_context_events = enable
+    def self.config
+      @config ||= Resugan::Config.new
+      if block_given?
+        yield @config
+      end
+
+      @config
+    end
+
+    def self.reuse_top_level_context?
+      config.reuse_top_level_context
     end
 
     def self.warn_no_context_events?
-      @warn_no_context_events || false
-    end
-
-    # flag to log the line source where a fire was executed
-    def self.enable_line_trace(enable)
-      @enable = enable
+      config.warn_no_context_events
     end
 
     def self.line_trace_enabled?
-      @enable || false
+      config.line_trace_enabled
     end
 
     def self.set_default_dispatcher(dispatcher)
-      @default_dispatcher ||= dispatcher.new
+      config.default_dispatcher = dispatcher
     end
 
     def self.default_dispatcher
-      @default_dispatcher || Resugan::Engine::InlineDispatcher.new
+      config.default_dispatcher
     end
 
     def self.dispatcher_for(namespace = '')
       @dispatchers = {} unless @dispatchers
-      @dispatchers[namespace] || default_dispatcher
+      @dispatchers[namespace.to_s] || default_dispatcher.new
     end
 
     def self.register_dispatcher(dispatcher, namespace = '')
       @dispatchers = {} unless @dispatchers
-      @dispatchers[namespace] = dispatcher.is_a?(Class) ? dispatcher.new : dispatcher
+      @dispatchers[namespace.to_s] = (dispatcher.is_a?(Class) ? dispatcher.new : dispatcher)
     end
 
     def self.register(event, &block)

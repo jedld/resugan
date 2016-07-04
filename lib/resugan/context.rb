@@ -1,7 +1,7 @@
 module Resugan
   class Context
     def initialize(namespace = '')
-      @namespace = namespace
+      @namespace = namespace.to_s
       @events = {}
     end
 

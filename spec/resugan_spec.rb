@@ -37,6 +37,7 @@ describe Resugan do
   before :each do
     Resugan::Kernel.clear
     Resugan::Kernel.set_default_dispatcher Resugan::Engine::MarshalledInlineDispatcher
+    Thread.current.send(:clear_context)
   end
 
   it 'captures _fire calls' do
@@ -109,6 +110,56 @@ describe Resugan do
       resugan { _fire :event2 }
 
       expect(@counter).to eq 2
+    end
+
+    context "nested resugan blocks" do
+      it "Only dispatches at the top level namespace by default" do
+        counter = 0
+
+        _listener :event1 do |params|
+          params.each {  counter += 1 }
+        end
+
+        resugan {
+          _fire :event1
+
+          resugan {
+            _fire :event1
+            _fire :event1
+          }
+          expect(counter).to eq 0
+        }
+
+        expect(counter).to eq 3
+      end
+
+      it "dispatches immediately at the end of the block if reuse_top_level_context = false" do
+        Resugan::Kernel.config do |c|
+          c.reuse_top_level_context = false
+        end
+
+        counter = 0
+
+        _listener :event1 do |params|
+          params.each {  counter += 1 }
+        end
+
+        resugan {
+          _fire :event1
+
+          resugan {
+            _fire :event1
+            _fire :event1
+          }
+
+          expect(counter).to eq 2
+        }
+        expect(counter).to eq 3
+
+        Resugan::Kernel.config do |c|
+          c.reuse_top_level_context = true
+        end
+      end
     end
   end
 
@@ -195,9 +246,13 @@ describe Resugan do
 
     context "debugging" do
       around :each do |example|
-        Resugan::Kernel.enable_line_trace true
+        Resugan::Kernel.config do |c|
+          c.line_trace_enabled = true
+        end
         example.run
-        Resugan::Kernel.enable_line_trace false
+        Resugan::Kernel.config do |c|
+          c.line_trace_enabled = false
+        end
       end
 
       it "a resugan block returns a context which can be dumped" do
