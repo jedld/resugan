@@ -247,6 +247,12 @@ Can also be used as a sample on how to extend resugan.
 
 https://github.com/jedld/resugan-worker
 
+### Testing
+
+RSpec helpers are available:
+
+https://github.com/jedld/resugan-rspec
+
 ## Similar Projects
 
 wisper (https://github.com/krisleech/wisper) - An excellent gem that focuses on a coupled pub-sub model. Though its global listeners somehow have the same effect though in a syntactically different way.
