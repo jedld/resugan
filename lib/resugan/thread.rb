@@ -1,10 +1,10 @@
 class Thread
-  def push_resugan_context(namespace = '')
+  def push_resugan_context(namespace = '', force_invoke = false)
     @resugan_context_stack ||= []
 
     namespace = namespace.to_s
 
-    if @resugan_context.nil? || !Resugan::Kernel.reuse_top_level_context?
+    if @resugan_context.nil? || !Resugan::Kernel.reuse_top_level_context? || force_invoke
       @resugan_context = Resugan::Context.new(namespace)
     elsif @resugan_context.namespace != namespace
       @resugan_context = (@resugan_context_stack.reverse.find { |e| e.namespace == namespace }) || Resugan::Context.new(namespace)
@@ -13,12 +13,12 @@ class Thread
     @resugan_context_stack << @resugan_context
   end
 
-  def pop_resugan_context
+  def pop_resugan_context(force_invoke = false)
     _resugan_context = @resugan_context_stack.pop
     @resugan_context = @resugan_context_stack.last
 
     # depending on option, only invoke if top level
-    if Resugan::Kernel.reuse_top_level_context?
+    if !force_invoke && Resugan::Kernel.reuse_top_level_context?
       _resugan_context.invoke if @resugan_context_stack.find { |e| e.namespace == _resugan_context.namespace }.nil?
     elsif
       _resugan_context.invoke

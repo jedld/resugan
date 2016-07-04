@@ -130,7 +130,26 @@ describe Resugan do
           expect(counter).to eq 0
         }
 
-        expect(counter).to eq 3
+        counter = 0
+
+        resugan {
+          _fire :event1
+
+          resugan {
+            _fire :event1
+            _fire :event1
+
+            resugan! {
+              _fire :event1
+            }
+
+            expect(counter).to eq 1
+          }
+
+          expect(counter).to eq 1
+        }
+
+        expect(counter).to eq 4
       end
 
       it "dispatches immediately at the end of the block if reuse_top_level_context = false" do

@@ -11,6 +11,18 @@ class Object
     context
   end
 
+  def resugan!(namespace = '', &block)
+    namespace ||= ''
+    current_thread = Thread.current
+    current_thread.push_resugan_context(namespace, true)
+    begin
+      block.call
+    ensure
+      context = current_thread.pop_resugan_context(true)
+    end
+    context
+  end
+
   def _fire(event, params = {})
     params[:_source] = caller[0] if Resugan::Kernel.line_trace_enabled?
 

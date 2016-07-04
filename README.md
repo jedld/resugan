@@ -147,6 +147,57 @@ listener that belongs to 2 namespaces
 hello! someone said hay!
 listener that belongs to 2 namespaces
 ```
+
+### Behavior of nested resugan blocks
+
+Resugan will by default only resolve events at the outermost resugan context of
+a namespace.
+
+```ruby
+_listener :event1 do |array_of_params|
+  puts "hello! event 1"
+end
+
+_listener :event2, namespace: "group2" do |array_of_params|
+  puts "hello! event 1"
+end
+
+resugan {
+  _fire :event1
+
+  resugan {
+    _fire :event2
+  }
+}
+```
+
+If there are nested resugan blocks note that event dispatch will occur at the
+outermost context. Output will be:
+
+```
+hello! event 1
+hello! event 2
+```
+
+To force the innermost block to immediately resolve, use resugan! instead (or set Kernel.config.reuse_top_level_context = false globally):
+
+```ruby
+resugan {
+  _fire :event1
+
+  resugan! {
+    _fire :event2
+  }
+}
+```
+
+Since the inner block will be resolved first, Output will be:
+
+```
+hello! event 2
+hello! event 1
+```
+
 ## Unique Listeners
 
 the _listener always creates a new listener for an event, so if it so happens that
@@ -207,7 +258,9 @@ This allows you to use various queue backends per namespace, like resugan-worker
 Sometimes you need to track where events are fired. You can do so by enabling line tracing:
 
 ```ruby
-  Resugan::Kernel.enable_line_trace true
+  Resugan::Kernel.config do |c|
+    c.line_trace_enabled = true
+  end
 ```
 
 Line source should now be passed as params everytime you fire an event. You can also
