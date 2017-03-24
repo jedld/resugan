@@ -30,7 +30,7 @@ class Object
     if current_thread.resugan_context
       current_thread.resugan_context.register(event, params)
     else
-      puts "WARN: #{event} called in #{caller[0]} but was not inside a resugan {} block" if Resugan::Kernal.warn_no_context_events?
+      puts "WARN: #{event} called in #{caller[0]} but was not inside a resugan {} block" if Resugan::Kernel.warn_no_context_events?
     end
   end
 
